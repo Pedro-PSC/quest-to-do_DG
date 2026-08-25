@@ -6,11 +6,50 @@ function App() {
   const localQuests = JSON.parse(window.localStorage.getItem("quests")) || [];
   const [quests, setQuests] = useState(localQuests);
 
-  function saveAddQuest(title){
+  function saveDeleteQuest(quest){
+    let auxQuests = quests;
+
+    const filterAuxQuests = auxQuests.findIndex((auxQuest) => auxQuest.id !== quest.id);
+
+    localQuests.setItem("quests", JSON.stringify(filterAuxQuests));
+    getQuests();
+  }
+
+  function saveEditQuest(quest, title) {
+    let auxQuests = quests;
+    const editedQuest = {
+      id: quest.id,
+      title: title || quest.title,
+      status: quest.status,
+      created_at: quest.created_at
+    };
+
+    const findQuestPosition = auxQuests.findIndex((quest) => quest.id === editedQuest.id)
+    auxQuests.splice(findQuestPosition, 1, editedQuest)
+    localStorage.setItem("quests", JSON.stringify(auxQuests))
+    getQuests();
+  };
+
+  function saveConcludedQuest(quest) {
+    let auxQuests = quests;
+    const editedQuest = {
+      id: quest.id,
+      title: quest.title,
+      status: "finished",
+      created_at: quest.created_at
+    };
+
+    const findQuestPosition = auxQuests.findIndex((quest) => quest.id === editedQuest.id)
+    auxQuests.splice(findQuestPosition, 1, editedQuest)
+    localStorage.setItem("quests", JSON.stringify(auxQuests))
+    getQuests();
+  }
+
+  function saveAddQuest(title) {
     let auxQuests = quests;
     let id = 0;
-    if (auxQuests,length){
-      id = auxQuests[auxQuests,length-1].id;
+    if (auxQuests, length) {
+      id = auxQuests[auxQuests, length - 1].id;
     }
     id++;
 
@@ -25,18 +64,40 @@ function App() {
     getQuests();
   }
 
-  function getQuests(){
+  function getQuests() {
     setQuests(JSON.parse(window.localStorage.getItem("quests")));
   }
 
+  const concludedQuests = quests.filter((quest) => quest.status === "finished")
+  const notConcludedQuests = quests.filter((quest) => quest.status === "open")
+
   return (
-    <div className="flex h-screen justify-center items-center">
-      <div className="card w-[80%] lg:w-[50%] h-[70%] shadow-md rounded-sm transform ease-out duration-300 items-center p-10 gap-5">
+    <div className="flex h-screen justify-center items-center bg-indigo-600">
+      <div className="card w-[80%] lg:w-[50%] h-[70%] shadow-md rounded-sm transform ease-out duration-300 items-center p-10 gap-5 bg-indigo-900">
         <h1 className="text-5xl font-work font-bold w-fit text-center">
           Quest To Do
         </h1>
-        <AddQuest saveAddQuest={saveAddQuest}/>
-        <QuestList quests={quests}/>
+        <AddQuest saveAddQuest={saveAddQuest} />
+
+        <div className="flex flex-col gap-4 w-full items-center text-white">
+          <h2>Opened</h2>
+          <QuestList
+            quests={notConcludedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcludedQuest={saveConcludedQuest}
+            saveDeleteQuest={saveDeleteQuest}
+          />
+        </div>
+
+        <div className="flex flex-col gap-4 w-full items-center text-white">
+          <h2>Finished</h2>
+          <QuestList
+            quests={concludedQuests}
+            saveEditQuest={saveEditQuest}
+            saveConcludedQuest={saveConcludedQuest}
+            saveDeleteQuest={saveDeleteQuest}
+          />
+        </div>
       </div>
     </div>
   )

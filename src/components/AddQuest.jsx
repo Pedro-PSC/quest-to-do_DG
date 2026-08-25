@@ -6,11 +6,11 @@ function AddQuest(props) {
         <div className="flex gap-4 w-full justify-center items-center">
             <input
                 placeholder="quest"
-                className="rounded-full bg-violet-200 pl-2 input-sm flex w-[70%] focus:outline-none"
+                className="rounded-full bg-indigo-200 pl-2 input-sm flex w-[70%] focus:outline-none"
                 onChange={(e) => setTitle(e.target.value)}
             />
             <button
-                className="flex items-center text-center rounded-full bg-violet-400 h-fit px-2
+                className="flex items-center text-center rounded-full bg-indigo-400 h-fit px-2
             text-lg transform ease-out duration-300"
                 onClick={() => props.saveAddQuest(title)}
             >

@@ -7,8 +7,8 @@ export default function QuestItem(props) {
     const concluded = props.quest.status === "finished";
 
     return (
-        <div>
-            <div>
+        <div className="flex gap-4 flex-col md:flex-row items-center">
+            <div className="flex gap-4 items-center w-full sm:w-[80%]">
                 <input
                     disabled={concluded}
                     type="checkbox"
@@ -18,7 +18,7 @@ export default function QuestItem(props) {
                         if (concluded) return;
                         else {
                             setChecked(!checked);
-                            props.saveConcludedQuests(props.quest);
+                            props.saveConcludedQuest(props.quest);
                         }
                     }}
                 />
@@ -28,7 +28,7 @@ export default function QuestItem(props) {
                         placeholder="quest"
                         defaultValue={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        className="rounded-full bg-violet-200 pl-2 w-full input-sm flex focus:outline-none"
+                        className="rounded-full bg-violet-200 pl-2 w-full input-sm flex focus:outline-none text-black"
                     />
                 ) : (
                     <p className="wrap-break-word">
@@ -38,14 +38,23 @@ export default function QuestItem(props) {
                 {!concluded && (
                     <div className="flex gap-4 w-full sm:w-fit justify-center">
                         <button
+                            className="bg-indigo-400 p-2 rounded-full w-[70px]"
                             onClick={() => {
                                 if (editMode) props.saveEditQuest(props.quest, title);
                                 setEditMode(!editMode);
                             }}
                         >
-                            Editar
+                            Edit
                         </button>
-                        <button>Excluir</button>
+                        <button
+                            className="bg-indigo-400 p-2 rounded-full w-[70px]"
+                            onClick={() => {
+                                if (concluded) return;
+                                else props.saveDeleteQuest(props.quest);
+                            }}
+                        >
+                            Delete
+                        </button>
                     </div>
                 )}
             </div>
